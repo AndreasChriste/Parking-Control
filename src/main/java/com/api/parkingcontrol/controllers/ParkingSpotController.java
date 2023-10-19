@@ -68,7 +68,6 @@ public class ParkingSpotController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     @Operation(summary = "Return all  registered Parking Spots", description = "Return all  registered Parking Spots")
-
     public ResponseEntity<Page<ParkingSpotModel>> getAllParkingSpotModel(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll(pageable));
     }

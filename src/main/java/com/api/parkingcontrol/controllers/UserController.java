@@ -23,16 +23,20 @@ import com.api.parkingcontrol.models.UserModel;
 import com.api.parkingcontrol.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
+
+@Tag(name = "User Controller", description = "User Api REST")
 @RequestMapping("/cadastro")
 public class UserController {
 
 	@Autowired
 	UserService userService;
 
+	@Operation(summary = "Return the User inserted in the database", description = "Return the User inserted in the database")
 	@PostMapping
 	@Transactional
 	public ResponseEntity<Object> saveUser(@RequestBody UserModel userModel) {
@@ -40,6 +44,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userModel));
 	}
 
+	@Operation(summary = "Return all registered user", description = "Return all registered user")
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> getAllUsers() {
 		List<UserModel> users = userService.findAll(); 
@@ -59,6 +64,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@Operation(summary = "delete a user registered record searched by id", description = "delete a registered record searched by id")
 	public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") UUID id){
 		Optional<UserModel> userModelOptional = userService.findById(id);
 		if(!userModelOptional.isPresent()) {
@@ -68,7 +74,7 @@ public class UserController {
 	}
 	
 	  @PutMapping("/{id}")
-	    @Operation(summary = "update a registered record searched by id", description = "dupdate a registered record searched by id")
+	    @Operation(summary = "Update a registered record searched by id", description = "Update a registered record searched by id")
 	    public ResponseEntity<Object> updateParkingSpot(@PathVariable (value= "id") UUID id, @RequestBody UserModel userModel){
 	        Optional<UserModel> userModelOptional = userService.findById(id);
 	        if(!userModelOptional.isPresent()){
