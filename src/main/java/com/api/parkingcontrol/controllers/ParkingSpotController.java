@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,7 @@ public class ParkingSpotController {
     @Autowired
     ParkingSpotService parkingSpotService;
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @Operation(summary = "Return the Object inserted in the database", description = "Return the Object inserted in the database")
     public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDTO parkingSpotDto){
@@ -63,6 +64,8 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotModel));
     }
 
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     @Operation(summary = "Return all  registered Parking Spots", description = "Return all  registered Parking Spots")
 
@@ -70,6 +73,8 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll(pageable));
     }
 
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     @Operation(summary = "returns a registered record searched by id", description = "returns a registered record searched by id")
     public ResponseEntity<Object> getOneParkingSpotModel(@PathVariable(value= "id") UUID id){
@@ -80,6 +85,8 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotModelOptional.get());
     }
 
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @Operation(summary = "delete a registered record searched by id", description = "delete a registered record searched by id")
     public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value="id") UUID id){
@@ -91,6 +98,9 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.OK).body("Parking Spot deleted successfully");
     }
 
+    
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "update a registered record searched by id", description = "dupdate a registered record searched by id")
     public ResponseEntity<Object> updateParkingSpot(@PathVariable (value= "id") UUID id, @RequestBody @Valid ParkingSpotDTO parkingSpotDto){
